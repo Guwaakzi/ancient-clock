@@ -385,7 +385,7 @@
 
                         // 时辰名称
             const hourNames = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
-            const keNames = ['初一刻', '初二刻', '初三刻', '初四刻', '正一刻', '正二刻', '正三刻', '正四刻'];
+            const keNames = ['初初刻', '初一刻', '初二刻', '初三刻', '正初刻', '正一刻', '正二刻', '正三刻'];
             const ziNames = ['一字', '二字', '三字'];
             
     
@@ -480,7 +480,7 @@
                 
                 // 更新传统时间
                 traditionalTimeElement.textContent = 
-                    `${traditionalHour}时${traditionalKe}${traditionalZi}${Math.floor(traditionalMin)}分${traditionalSec}秒`;
+                    `${traditionalHour}${traditionalKe}${traditionalZi}${Math.floor(traditionalMin)}分${traditionalSec}秒`;
             }
             
                     // 更新时间函数
@@ -540,3 +540,4 @@
     </script>
 </body>
 </html>
+
