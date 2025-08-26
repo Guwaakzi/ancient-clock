@@ -466,14 +466,17 @@
             }
 
                     // 更新时间显示
-            function updateTimeDisplay(hours, minutes, seconds, milliseconds) {
+           function updateTimeDisplay(hours, minutes, seconds, milliseconds) {
+                // 调整小时计算：将23:00作为一天的开始
+                let adjustedHours = (hours + 1) % 24;
+                
                 // 更新现代时间
                 modernTimeElement.textContent = 
                     `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
                 
-                // 计算传统时间
-                const traditionalHour = hourNames[Math.floor(hours / 2) % 12];
-                const traditionalKe = keNames[Math.floor((hours % 2) * 4 + minutes / 15) % 8];
+                // 计算传统时间 - 使用调整后的小时
+                const traditionalHour = hourNames[Math.floor(adjustedHours / 2) % 12];
+                const traditionalKe = keNames[Math.floor((adjustedHours % 2) * 4 + minutes / 15) % 8];
                 const traditionalZi = ziNames[Math.floor((minutes % 15) / 5)];
                 const traditionalMin = Math.floor((minutes % 5) * 60 + seconds) / 15 % 20;
                 const traditionalSec = Math.floor((seconds * 1000 + milliseconds) / 250 % 60);
@@ -496,30 +499,21 @@
                 // 更新显示
                 updateTimeDisplay(hours, minutes, seconds, milliseconds);
                 
-                // 计算传统时间指针角度
-                // 时针：每2现代小时转30度，一圈12时辰（24现代小时）
-                // const hourAngle = (hours % 24) * 15 + (minutes / 60) * 15;
-                const hourTotalSec = (hours % 24) * 3600 + minutes * 60 + seconds + milliseconds / 1000;
-                const hourAngle = hourTotalSec / 240; // 15度/小时 = 0.25度/分钟 = 1/240度/秒
+                // 计算传统时间指针角度 - 使用调整后的小时
+                let adjustedHours = (hours + 1) % 24;
+                const hourTotalSec = (adjustedHours % 24) * 3600 + minutes * 60 + seconds + milliseconds / 1000;
+                const hourAngle = hourTotalSec / 240;
                 
-                // 刻针：每15现代分钟转45度，一圈8刻（2现代小时）
-                // const keAngle = ((hours % 2) * 60 + minutes) % 120 * 3;
-                const keTotalSec = ((hours % 2) * 3600 + minutes * 60 + seconds + milliseconds / 1000) % 7200;
+                // 其他指针角度计算保持不变
+                const keTotalSec = ((adjustedHours % 2) * 3600 + minutes * 60 + seconds + milliseconds / 1000) % 7200;
                 const keAngle = keTotalSec / 20;
                 
-                // 字针：每5现代分钟转120度，一圈3字（15现代分钟）
-                // const ziAngle = (minutes % 15) * 24 + (seconds / 60) * 24;
-                
-                
                 const ziTotalSec = (minutes % 15) * 60 + seconds + milliseconds / 1000;
-                const ziAngle = ziTotalSec * 0.4; // 24°/min = 0.4°/sec
+                const ziAngle = ziTotalSec * 0.4;
 
-                // // 分针：每15现代秒转18度，一圈20分（5现代分钟）
-                // const minAngle = ((minutes % 5) * 60 + seconds) % 300 * 1.2;
                 const minTotalSec = (minutes % 5) * 60 + seconds + milliseconds / 1000;
-                const minAngle = minTotalSec * 1.2; // 360°/300sec = 1.2°/sec
+                const minAngle = minTotalSec * 1.2;
                 
-                // 秒针：每0.25现代秒转6度，一圈60秒（15现代秒）
                 const secAngle = (seconds * 1000 + milliseconds) % 15000 / 15000 * 360;
                 
                 // 应用旋转
@@ -540,4 +534,5 @@
     </script>
 </body>
 </html>
+
 
