@@ -41,12 +41,7 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
             margin-bottom: 10px;
         }
-        
-        .subtitle {
-            font-size: 20px;
-            color: #c9ad61;
-        }
-        
+              
         .content {
             display: flex;
             flex-wrap: wrap;
@@ -64,14 +59,14 @@
         
         .clock-frame {
             position: relative;
-            width: 100%;
-            height: 100%;
+            width: 100% !important;
+            height: 100% !important;
             border-radius: 50%;
             background: #f0e6d2;
-            box-shadow: 
+            /* box-shadow: 
                 0 0 0 14px #8b4513,
                 0 0 30px rgba(0, 0, 0, 0.4),
-                inset 0 0 30px rgba(184, 146, 93, 0.3);
+                inset 0 0 30px rgba(184, 146, 93, 0.3); */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -79,8 +74,10 @@
         
         .clock {
             position: relative;
-            width: 434px;
-            height: 434px;
+            width: 100% !important;  /* 关键：改为100% */
+            height: 100% !important; /* 关键：改为100% */
+            /* width: 434px;
+            height: 434px; */
         }
         
         /* 中心点 */
@@ -106,42 +103,42 @@
             border-radius: 4px 4px 0 0;
             z-index: 10;
         }
-        
+        /* 120px */
         .hour-hand {
             width: 8px;
-            height: 120px;
+            height: 27.65%;
             background: #3d230e;
             margin-left: -4px;
             z-index: 5;
         }
-        
+        /* 145px */
         .ke-hand {
             width: 6px;
-            height: 145px;
+            height: 33.41%;
             background: #a52a2a;
             margin-left: -3px;
             z-index: 6;
         }
-        
+        /* 120px */
         .zi-hand {
             width: 4px;
-            height: 120px;
-            background: #d4af37;
+            height: 27.65%;
+            background: #b48f15;
             margin-left: -2px;
             z-index: 7;
         }
-        
+        /* 180px */
         .min-hand {
             width: 3px;
-            height: 180px;
+            height: 41.47%;
             background: #2f4f4f;
             margin-left: -1.5px;
             z-index: 8;
         }
-        
+        /* 200px */
         .sec-hand {
             width: 2px;
-            height: 200px;
+            height: 46.08%;
             background: #8b0000;
             margin-left: -1px;
             z-index: 9;
@@ -176,8 +173,8 @@
         }
         
         .zi-ring {
-            width: 280px;
-            height: 280px;
+            width: 64.5% !important;  /* 280/434 ≈ 64.5% */
+            height: 64.5% !important;
             background: conic-gradient(
                 #d4af37 0deg 120deg,
                 #c19a6b 120deg 240deg,
@@ -307,7 +304,6 @@
     <div class="container">
         <div class="header">
             <h1 class="title">中国传统钟表</h1>
-            <p class="subtitle">融合传统时间与现代时间的计时艺术</p>
         </div>
         <div class="content">
             <div class="clock-container">
@@ -315,7 +311,17 @@
                     <div class="pattern"></div>
                     <div class="clock">
                         <!-- SVG绘制刻度 -->
-                        <svg class="clock" width="660" height="660" viewBox="0 0 450 450">
+                        <svg class="clock" width="100%" height="100%" viewBox="0 0 450 450">
+                                <!-- 添加最外圈圆环 -->
+                            <circle 
+                                cx="225" 
+                                cy="225" 
+                                r="218"  /* 半径（根据需要调整） */
+                                fill="none" 
+                                stroke="#8b4513" 
+                                stroke-width="14" 
+                                opacity="0.7"
+                            />
                             <g id="sec-marks"></g>
                             <g id="min-marks"></g>
                             <g id="ke-marks"></g>
@@ -388,22 +394,8 @@
             function initMarks() {
                 const svgNS = "http://www.w3.org/2000/svg";
                 const svg = document.querySelector('svg');
-                
-                // 秒针刻度（60格）
-                // const secMarks = document.getElementById('sec-marks');
-                // for (let i = 0; i < 60; i++) {
-                //     const line = document.createElementNS(svgNS, "line");
-                //     line.setAttribute("x1", "225");
-                //     line.setAttribute("y1", "15");
-                //     line.setAttribute("x2", "225");
-                //     line.setAttribute("y2", "20");
-                //     line.setAttribute("stroke", "#999");
-                //     line.setAttribute("stroke-width", "1");
-                //     line.setAttribute("transform", `rotate(${i * 6} 225 225)`);
-                //     secMarks.appendChild(line);
-                // }
-                
-                // 分针刻度（60格，每3格加长）
+                             
+                // 分针和秒针的刻度（60格，每3格加长）
                 const minMarks = document.getElementById('min-marks');
                 for (let i = 0; i < 60; i++) {
                     const line = document.createElementNS(svgNS, "line");
@@ -415,6 +407,16 @@
                     line.setAttribute("stroke-width", i % 3 === 0 ? "3" : "1");
                     line.setAttribute("transform", `rotate(${i * 6} 225 225)`);
                     minMarks.appendChild(line);
+                    // 👉 添加小圆点（关键修改）👉
+                    if (i % 12 === 0) {
+                        const circle = document.createElementNS(svgNS, "circle");
+                        circle.setAttribute("cx", "225");     // X坐标（中心）
+                        circle.setAttribute("cy", "30");     // Y坐标（30 = 距离中心195px）
+                        circle.setAttribute("r", "2");    // 半径1.5px（直径3px）
+                        circle.setAttribute("fill", "#8b4513"); // 棕色填充
+                        circle.setAttribute("transform", `rotate(${i * 6} 225 225)`);
+                        minMarks.appendChild(circle);
+                    }
                 }
                 
                 // 刻针刻度（8格）
@@ -496,21 +498,24 @@
                 
                 // 计算传统时间指针角度
                 // 时针：每2现代小时转30度，一圈12时辰（24现代小时）
-                const hourAngle = (hours % 24) * 15 + (minutes / 60) * 15;
+                // const hourAngle = (hours % 24) * 15 + (minutes / 60) * 15;
+                const hourTotalSec = (hours % 24) * 3600 + minutes * 60 + seconds + milliseconds / 1000;
+                const hourAngle = hourTotalSec / 240; // 15度/小时 = 0.25度/分钟 = 1/240度/秒
                 
                 // 刻针：每15现代分钟转45度，一圈8刻（2现代小时）
-                const keAngle = ((hours % 2) * 60 + minutes) % 120 * 3;
+                // const keAngle = ((hours % 2) * 60 + minutes) % 120 * 3;
+                const keTotalSec = ((hours % 2) * 3600 + minutes * 60 + seconds + milliseconds / 1000) % 7200;
+                const keAngle = keTotalSec / 20;
                 
                 // 字针：每5现代分钟转120度，一圈3字（15现代分钟）
                 // const ziAngle = (minutes % 15) * 24 + (seconds / 60) * 24;
                 
-                // // 分针：每15现代秒转18度，一圈20分（5现代分钟）
-                // const minAngle = ((minutes % 5) * 60 + seconds) % 300 * 1.2;
-                // 字针（连续）
+                
                 const ziTotalSec = (minutes % 15) * 60 + seconds + milliseconds / 1000;
                 const ziAngle = ziTotalSec * 0.4; // 24°/min = 0.4°/sec
 
-                // 分针（连续）
+                // // 分针：每15现代秒转18度，一圈20分（5现代分钟）
+                // const minAngle = ((minutes % 5) * 60 + seconds) % 300 * 1.2;
                 const minTotalSec = (minutes % 5) * 60 + seconds + milliseconds / 1000;
                 const minAngle = minTotalSec * 1.2; // 360°/300sec = 1.2°/sec
                 
