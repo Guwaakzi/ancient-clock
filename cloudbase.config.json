@@ -1,0 +1,17 @@
+{
+  "envId": "ancient-clock-4g8gp9xg0a9cb1d0",
+  "framework": {
+    "name": "docker",
+    "config": {
+      "dockerfilePath": "Dockerfile",
+      "buildDir": "."
+    }
+  },
+  "routes": [
+    {
+      "path": "/*",
+      "serviceType": "static",
+      "serviceName": "static"
+    }
+  ]
+}
